@@ -6,6 +6,7 @@ const elements = {
     themeToggle: document.getElementById('themeToggle'),
     mobileMenuBtn: document.getElementById('mobileMenuBtn'),
     navMenu: document.getElementById('navMenu'),
+    navOverlay: document.getElementById('navOverlay'),
     navLinks: document.querySelectorAll('.nav-link'),
     navbar: document.getElementById('navbar'),
     scrollTopBtn: document.getElementById('scrollTop'),
@@ -68,24 +69,57 @@ function toggleTheme() {
 // ================================
 function initMobileNav() {
     // Toggle mobile menu
-    elements.mobileMenuBtn.addEventListener('click', () => {
-        elements.mobileMenuBtn.classList.toggle('active');
-        elements.navMenu.classList.toggle('active');
-        document.body.style.overflow = elements.navMenu.classList.contains('active') ? 'hidden' : '';
-    });
+    elements.mobileMenuBtn.addEventListener('click', toggleMobileMenu);
+
+    // Close menu when clicking overlay
+    if (elements.navOverlay) {
+        elements.navOverlay.addEventListener('click', closeMobileMenu);
+    }
 
     // Close menu when clicking a nav link
     elements.navLinks.forEach(link => {
         link.addEventListener('click', () => {
-            elements.mobileMenuBtn.classList.remove('active');
-            elements.navMenu.classList.remove('active');
-            document.body.style.overflow = '';
+            closeMobileMenu();
 
             // Update active link
             elements.navLinks.forEach(l => l.classList.remove('active'));
             link.classList.add('active');
         });
     });
+
+    // Close menu on escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && elements.navMenu.classList.contains('active')) {
+            closeMobileMenu();
+        }
+    });
+}
+
+function toggleMobileMenu() {
+    const isActive = elements.navMenu.classList.contains('active');
+    if (isActive) {
+        closeMobileMenu();
+    } else {
+        openMobileMenu();
+    }
+}
+
+function openMobileMenu() {
+    elements.mobileMenuBtn.classList.add('active');
+    elements.navMenu.classList.add('active');
+    if (elements.navOverlay) {
+        elements.navOverlay.classList.add('active');
+    }
+    document.body.style.overflow = 'hidden';
+}
+
+function closeMobileMenu() {
+    elements.mobileMenuBtn.classList.remove('active');
+    elements.navMenu.classList.remove('active');
+    if (elements.navOverlay) {
+        elements.navOverlay.classList.remove('active');
+    }
+    document.body.style.overflow = '';
 }
 
 // ================================
