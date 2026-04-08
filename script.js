@@ -80,7 +80,6 @@ function initMobileNav() {
     elements.navLinks.forEach(link => {
         link.addEventListener('click', () => {
             closeMobileMenu();
-
             // Update active link
             elements.navLinks.forEach(l => l.classList.remove('active'));
             link.classList.add('active');
